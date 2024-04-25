@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor with Rope</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- used for importing finger tree -->
+    <!-- <script src="fingertree.js"></script> -->
+</head>
+<body>
+    <nav class="flex justify-center items-center mt-4 mb-8">
+        <h1 class="text-3xl font-medium underline">
+            Text Editor using Rope
+        </h1>
+    </nav>
+    <div class="flex justify-center items-center">
+        <textarea id="textInput" rows="10" cols="80" class="border border-gray-300 px-4 py-2 rounded-md">
+        </textarea>
+    </div>
+    <div class="flex justify-between mt-4 mx-12">
+        <div>
+            <h2 class="text-xl font-normal">Finger Tree Rope Operations</h2>
+            <div id="opLogFTrope" class="px-6"></div>
+        </div>
+        
+        <div>
+            <h2 class="text-xl font-normal">Binary Tree Rope Operations</h2>
+            <div id="opLogBTrope" class="px-6"></div>
+        </div>
+    </div>
+    
+    <!-- used for main text editor work -->
+    <script src="script.js"></script>
+
+</body>
+</html>
