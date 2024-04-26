@@ -43,6 +43,12 @@ textarea.addEventListener('keydown', function(event) {
         logOperation(`deleted ${removedChar} at index ${ftRope.cursor + 1} in finger tree rope `)
     }
     
+    // text case for enter
+    if (event.keyCode == 13) {
+        ftRope.insertCharacter('\n');
+        logOperation(`inserted ${'\\n'} at index ${ftRope.cursor} in finger tree rope`)
+    }
+    
     // log operation for left/right
     if ([37, 39].includes(event.keyCode) && !event.shiftKey) {
         // const direction = event.keyCode === 37 ? 'left' : 'right';
