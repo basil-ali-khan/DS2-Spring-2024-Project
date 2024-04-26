@@ -161,7 +161,8 @@ index++;
 // deletion
 index=index-1;
 
-rope = rope.deleteCharacter(index);
+rope = rope.deleteLastCharacter(index);
 
 
 printRope(rope);
+
