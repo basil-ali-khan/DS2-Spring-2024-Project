@@ -40,7 +40,8 @@ textarea.addEventListener('keydown', function(event) {
     if (event.keyCode == 8) {
         // logOperation2(`removed a character`)
         var removedChar = ftRope.deleteCharacter();
-        logOperation(`deleted ${removedChar} at index ${ftRope.cursor + 1} in finger tree rope `)
+        if (removedChar !== undefined) 
+            logOperation(`deleted ${removedChar} at index ${ftRope.cursor + 1} in finger tree rope `)
     }
     
     // text case for enter
@@ -48,9 +49,14 @@ textarea.addEventListener('keydown', function(event) {
         ftRope.insertCharacter('\n');
         logOperation(`inserted ${'\\n'} at index ${ftRope.cursor} in finger tree rope`)
     }
+
+    else if (event.keyCode == 32) {
+        ftRope.insertCharacter(' ');
+        logOperation(`inserted ${'space'} at index ${ftRope.cursor} in finger tree rope`)
+    }
     
     // log operation for left/right
-    if ([37, 39].includes(event.keyCode) && !event.shiftKey) {
+    else if ([37, 39].includes(event.keyCode) && !event.shiftKey) {
         // const direction = event.keyCode === 37 ? 'left' : 'right';
         // logOperation(`Cursor decremented and index changed to ${direction}`);
         if (event.keyCode === 37) {
@@ -64,7 +70,7 @@ textarea.addEventListener('keydown', function(event) {
     }
     
     // ensure ctrl+y, ctrl+A, ctrl+x, ctrl+V & ctrl+C not usable 
-    else if (event.ctrlKey && [65, 67, 86, 88, 89, 90].includes(event.keyCode))
+    else if (event.ctrlKey && [37, 39, 65, 67, 86, 88, 89, 90].includes(event.keyCode))
     {
         event.preventDefault();
     }
