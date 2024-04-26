@@ -6,6 +6,7 @@ class Rope {
 
     constructor() {
         this.tree = FingerTree.fromArray([]);
+        // this.rightTree = FingerTree.fromArray([]);
         this.cursor = 0;
     }
 
@@ -21,10 +22,11 @@ class Rope {
     }
     
     insertCharacter(character) {
-        if (this.cursor === 0) {
-            this.tree = this.tree.addFirst(character);
-        }
-        else if (this.cursor === this.tree.measure()) {
+        // if (this.cursor === 0) {
+        //     this.tree = this.tree.addFirst(character);
+        // }
+        // else 
+        if (this.cursor === this.tree.measure()) {
             this.tree = this.tree.addLast(character);
         }
         else {
@@ -53,15 +55,15 @@ class Rope {
         this.cursor--;
     }
     
-    printDocument() {
+    printRope() {
         var result = "";
-        var newTree = FingerTree.fromArray([this.tree.peekFirst()]);
+        var newTree = FingerTree.fromArray([]);
         while (this.tree.measure() != 0)
         {
             let item = this.tree.peekFirst();
             this.tree = this.tree.removeFirst();
             // console.log(item, ", ");
-            result += item + ", ";
+            result += item;
             newTree = newTree.addLast(item);
         }
         this.tree = newTree;
@@ -75,8 +77,13 @@ var rope = new Rope();
 rope.insertCharacter('h');
 rope.decrementCursor();
 rope.insertCharacter('e');
+rope.printRope(); // hel1o
 rope.insertCharacter('l');
+rope.printRope(); // hel1o
+
+rope.incrementCursor();
 rope.insertCharacter('1');
+rope.printRope(); // hel1o
 rope.insertCharacter('o');
 
-rope.printDocument(); // hel1o
+rope.printRope(); // hel1o
