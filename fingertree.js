@@ -116,7 +116,7 @@
     };
   
     /**
-     * Return a new digit with the first item removed.
+     * Return a new digit with the last item removed.
      * @return {Digit}
      */
     Digit.prototype.removeLast = function () {

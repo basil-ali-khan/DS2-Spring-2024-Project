@@ -7,6 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- used for importing finger tree -->
     <!-- <script src="fingertree.js"></script> -->
+
+    <style>
+        /* Style for log sections */
+        .log-section {
+            max-height: 200px; /* Adjust height as needed */
+            width: 700px; /* Adjust width as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Optional: Add border */
+            padding: 8px; /* Optional: Add padding */
+        }
+    </style>
 </head>
 <body>
     <nav class="flex justify-center items-center mt-4 mb-8">
@@ -21,12 +32,12 @@
     <div class="flex justify-between mt-4 mx-12">
         <div>
             <h2 class="text-xl font-normal">Finger Tree Rope Operations</h2>
-            <div id="opLogFTrope" class="px-6"></div>
+            <div id="opLogFTrope" class="log-section px-6"></div>
         </div>
         
         <div>
             <h2 class="text-xl font-normal">Binary Tree Rope Operations</h2>
-            <div id="opLogBTrope" class="px-6"></div>
+            <div id="opLogBTrope" class="log-section px-6"></div>
         </div>
     </div>
     
