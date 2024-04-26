@@ -6,7 +6,8 @@
     <title>Text Editor with Rope</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- used for importing finger tree -->
-    <!-- <script src="fingertree.js"></script> -->
+    <script src="fingertree.js"></script>
+    <script src="rope.js"></script>
 
     <style>
         /* Style for log sections */
@@ -31,13 +32,22 @@
     </div>
     <div class="flex justify-between mt-4 mx-12">
         <div>
-            <h2 class="text-xl font-normal">Finger Tree Rope Operations</h2>
-            <div id="opLogFTrope" class="log-section px-6"></div>
+            <h2 class="text-2xl font-medium my-2">Finger Tree Rope Operations</h2>
+            <div class="border-2 border-gray-400 px-4 py-2 mb-4 max-w-2xl">
+                Finger tree rope is currently: 
+                <div id="ftRope_data" class="inline my-2 underline max-w-xl"></div>
+            </div>
+            <div id="opLogFTrope" class="log-section px-6 mt-2"></div>
         </div>
         
         <div>
-            <h2 class="text-xl font-normal">Binary Tree Rope Operations</h2>
-            <div id="opLogBTrope" class="log-section px-6"></div>
+            <h2 class="text-2xl font-medium my-2">Binary Tree Rope Operations</h2>
+            <div class="border-2 border-gray-400 px-4 py-2 mb-4 max-w-2xl">
+                Binary tree rope is currently: 
+                <div id="btRope_data" class="inline my-2 underline max-w-xl"></div>
+            </div>
+            <!-- <div id="btRope_data"></div> -->
+            <div id="opLogBTrope" class="log-section px-6 mt-2"></div>
         </div>
     </div>
     
