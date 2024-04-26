@@ -19,8 +19,8 @@ function createRope(str) {
     } else {
         // Otherwise, split the string into two parts and recursively create rope nodes for each part
         const mid = Math.floor(str.length / 2);
-        const leftStr = str.substring(0, mid);
-        const rightStr = str.substring(mid);
+        const leftStr = String(str).substring(0, mid);
+        const rightStr = String(str).substring(mid);
         const leftNode = createRope(leftStr);
         const rightNode = createRope(rightStr);
         return new RopeNode("", leftNode, rightNode, leftStr.length);
@@ -76,15 +76,18 @@ function splitNodeAt(node, index) {
     } else if (index >= node.weight) {
         // If the index is at or beyond the end, return the original node and an empty node
         return new RopeNode("", node, null, node.weight);
-    } else if (index < node.left.weight) {
-        // If the index is within the left child, recursively split the left child
+    } else if (node.left && index < node.left.weight) {
+        // If the left child exists and the index is within the left child, recursively split the left child
         const [leftChildLeft, leftChildRight] = splitRope(node.left, index);
         return new RopeNode("", leftChildLeft, new RopeNode("", leftChildRight, node.right, node.right.weight), index);
-    } else {
-        // If the index is within the right child, recursively split the right child
-        const [rightChildLeft, rightChildRight] = splitRope(node.right, index - node.left.weight);
+    } else if (node.right) {
+        // If the right child exists and the index is within the right child, recursively split the right child
+        const [rightChildLeft, rightChildRight] = splitRope(node.right, index - (node.left ? node.left.weight : 0));
         return new RopeNode("", new RopeNode("", node.left, rightChildLeft, index), rightChildRight, node.right.weight);
-    }
+    } else {
+        // Handle cases where either node.left or node.right is null
+        return new RopeNode("", node, null, node.weight);
+    }
 }
 
 function concatenateRopes(rope1, rope2) {
@@ -101,6 +104,31 @@ function concatenateRopes(rope1, rope2) {
     return new RopeNode("", rope1, rope2, weight);
 }
 
+function insertCharacter(rope, index, char) {
+    // Split the Rope at the specified index
+    const [leftRope, rightRope] = splitRope(rope, index);
+
+    // Create a new Rope for the character to be inserted
+    const charRope = new RopeNode(char);
+
+    // Concatenate the left Rope, the Rope containing the character, and the right Rope
+    const newRope = concatenateRopes(concatenateRopes(leftRope, charRope), rightRope);
+
+    return newRope;
+}
+
+function deleteCharacter(rope, index) {
+    // Split the Rope at the specified index
+    const [leftRope, rightRope] = splitRope(rope, index);
+
+    // Split the right Rope again to separate the character to be deleted
+    const [charRope, remainingRope] = splitRope(rightRope, 1);
+
+    // Concatenate the left Rope and the remaining Rope to remove the character
+    const newRope = concatenateRopes(leftRope, remainingRope);
+
+    return newRope;
+}
 
 
 // Example usage:
@@ -127,5 +155,14 @@ const rope_concatted = concatenateRopes(rope_to_concat1, rope_to_concat2);
 console.log("Concatenated Rope:");
 printRope(rope_concatted);
 
+// Example usage for insertion
+const indexToInsert = 15; // Index to insert the character
+const charToInsert = ' do not'; // Character to insert
+rope_after_insert = insertCharacter(rope, indexToInsert, charToInsert);
+console.log("Rope after insertion:");
+printRope(rope_after_insert); // Print the rope after insertion
 
-
+const indexToDelete = 10; // Index to delete the character
+rope_after_delete = deleteCharacter(rope, indexToDelete);
+console.log("Rope after deletion:");
+printRope(rope_after_delete); // Print the rope after deletion
