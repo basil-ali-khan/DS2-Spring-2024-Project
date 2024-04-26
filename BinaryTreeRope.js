@@ -1,210 +1,131 @@
-// // javascript program to concatenate two strings using
-// // rope data structure.
+// Maximum number of characters to be put in leaf nodes
+const LEAF_LEN = 5;
 
-// // Maximum no. of characters to be put in leaf nodes
-// const LEAF_LEN = 2;
-
-// // Rope structure
-// class Rope
-// {
-// 	constructor(){
-// 		this.left = null;
-// 		this.right = null;
-// 		this.parent = null;
-// 		this.str = new Array();
-// 		this.lCount = 0;
-// 	}
-// }
-
-// // Function that creates a Rope structure.
-// // node --> Reference to pointer of current root node
-// // l --> Left index of current substring (initially 0)
-// // r --> Right index of current substring (initially n-1)
-// // par --> Parent of current node (Initially NULL)
-// function createRopeStructure(node, par, a, l, r)
-// {
-// 	let tmp = new Rope();
-// 	tmp.left = tmp.right = null;
-
-// 	// We put half nodes in left subtree
-// 	tmp.parent = par;
-
-// 	// If string length is more
-// 	if ((r-l) > LEAF_LEN)
-// 	{
-// 		tmp.str = null;
-// 		tmp.lCount = Math.floor((r-l)/2);
-// 		node = tmp;
-// 		let m = Math.floor((l + r)/2);
-// 		createRopeStructure(node.left, node, a, l, m);
-// 		createRopeStructure(node.right, node, a, m+1, r);
-// 	}
-// 	else
-// 	{
-// 		node = tmp;
-// 		tmp.lCount = (r-l);
-// 		let j = 0;
-// 		// tmp.str = new Array(LEAF_LEN);
-// 		for (let i=l; i<=r; i++){
-// 			document.write(a[i]);
-// 			tmp.str[j++] = a[i];
-// 		}
-// 		document.write("\n");
-// 	}
-	
-// 	return node;
-// }
-
-// // Function that prints the string (leaf nodes)
-// function printstring(r)
-// {
-// 	if (r==null)
-// 		return;
-// 	if (r.left==null && r.right==null){
-// 		// console.log(r.str);	 
-// 	}
-
-// 	printstring(r.left);
-// 	printstring(r.right);
-// }
-
-// // Function that efficiently concatenates two strings
-// // with roots root1 and root2 respectively. n1 is size of
-// // string represented by root1.
-// // root3 is going to store root of concatenated Rope.
-// function concatenate(root3, root1, root2, n1)
-// {
-// 	// Create a new Rope node, and make root1 
-// 	// and root2 as children of tmp.
-// 	let tmp = new Rope();
-// 	tmp.left = root1;
-// 	tmp.right = root2;
-// 	root1.parent = tmp;
-// 	root2.parent = tmp;
-// 	tmp.lCount = n1;
-
-// 	// Make string of tmp empty and update 
-// 	// reference r
-// 	tmp.str = null;
-// 	root3 = tmp;
-	
-// 	return root3;
-// }
-
-// // Driver code
-// // Create a Rope tree for first string
-// let root1 = null;
-// let a = "Hi This is geeksforgeeks. ";
-// let n1 = a.length;
-// root1 = createRopeStructure(root1, null, a, 0, n1-1);
-
-// // Create a Rope tree for second string
-// let root2 = null;
-// let b = "You are welcome here.";
-// let n2 = b.length;
-// root2 = createRopeStructure(root2, null, b, 0, n2-1);
-
-// // Concatenate the two strings in root3.
-// let root3 = null;
-// root3 = concatenate(root3, root1, root2, n1);
-
-// // Print the new concatenated string
-// printstring(root3);
-// console.log();
-
-// // The code is contributed by Nidhi goel.
-
-// JavaScript program to concatenate two strings using rope data structure.
-
-// Maximum no. of characters to be put in leaf nodes
-const LEAF_LEN = 2;
-
-// Rope structure
-class Rope {
-    constructor() {
-        this.left = null;
-        this.right = null;
-        this.parent = null;
-        this.str = [];
-        this.lCount = 0;
+// Rope node structure
+class RopeNode {
+    constructor(str = "", left = null, right = null, weight = 0) {
+        this.str = str; // String stored in the node
+        this.left = left; // Left child node
+        this.right = right; // Right child node
+        this.weight = weight; // Weight of the left child (number of characters in the left child)
     }
 }
 
-// Function that creates a Rope structure.
-function createRopeStructure(node, par, a, l, r) {
-    let tmp = new Rope();
-    tmp.left = tmp.right = null;
-    tmp.parent = par;
-
-    // If string length is more than LEAF_LEN
-    if ((r - l) > LEAF_LEN) {
-        tmp.str = null;
-        tmp.lCount = Math.floor((r - l) / 2);
-        node = tmp;
-        let m = Math.floor((l + r) / 2);
-        createRopeStructure(node.left, node, a, l, m);
-        createRopeStructure(node.right, node, a, m + 1, r);
+// Function to create a rope structure from a string
+function createRope(str) {
+    if (str.length <= LEAF_LEN) {
+        // If the length of the string is less than or equal to LEAF_LEN, create a leaf node
+        return new RopeNode(str);
     } else {
-        node = tmp;
-        tmp.lCount = (r - l);
-        let j = 0;
-        for (let i = l; i <= r; i++) {
-            // Use console.log() instead of document.write()
-            console.log(a[i]);
-            tmp.str[j++] = a[i];
+        // Otherwise, split the string into two parts and recursively create rope nodes for each part
+        const mid = Math.floor(str.length / 2);
+        const leftStr = str.substring(0, mid);
+        const rightStr = str.substring(mid);
+        const leftNode = createRope(leftStr);
+        const rightNode = createRope(rightStr);
+        return new RopeNode("", leftNode, rightNode, leftStr.length);
+    }
+}
+// Function to print the string stored in the rope
+function printRope(rope) {
+    let result = ""; // Initialize an empty string to accumulate the result
+
+    // Helper function to traverse the rope and concatenate strings from leaf nodes
+    function traverse(node) {
+        if (node === null) {
+            return;
         }
-        console.log(""); // Print a newline
+
+        if (node.left === null && node.right === null) {
+            // If the node is a leaf node, append its string to the result
+            result += node.str;
+        } else {
+            // Otherwise, recursively traverse its children
+            traverse(node.left);
+            traverse(node.right);
+        }
     }
-    return node;
+
+    // Start traversal from the root of the rope
+    traverse(rope);
+
+    // Print the accumulated result
+    console.log(result);
 }
 
-// Function that prints the string (leaf nodes)
-function printString(r) {
-    if (r == null)
-        return '';
-
-    if (r.left == null && r.right == null && r.str !== null) {
-        // If r is a leaf node and r.str is not null, return the concatenated string
-        return r.str.join('');
+// Function to split the rope into two ropes at a given index
+function splitRope(rope, index) {
+    if (index === 0) {
+        // If the index is at the beginning, simply return the original rope and an empty rope
+        return [null, rope];
+    } else if (index >= rope.weight) {
+        // If the index is at or beyond the end of the rope, return the original rope and an empty rope
+        return [rope, null];
+    } else {
+        // If the index is within the rope, split it recursively
+        const splitNode = splitNodeAt(rope, index);
+        return [splitNode.left, splitNode.right];
     }
-    
-    // Recursively concatenate strings for left and right children
-    const leftStr = printString(r.left);
-    const rightStr = printString(r.right);
-
-    // Concatenate the strings from left and right children
-    return (leftStr + rightStr);
 }
 
-// Function that efficiently concatenates two strings
-function concatenate(root3, root1, root2, n1) {
-    let tmp = new Rope();
-    tmp.left = root1;
-    tmp.right = root2;
-    root1.parent = tmp;
-    root2.parent = tmp;
-    tmp.lCount = n1;
-    tmp.str = null;
-    root3 = tmp;
-    return root3;
+// Helper function to split a node at a given index and return the resulting two nodes
+function splitNodeAt(node, index) {
+    if (index === 0) {
+        // If the index is at the beginning, return an empty node and the original node
+        return new RopeNode("", null, node, 0);
+    } else if (index >= node.weight) {
+        // If the index is at or beyond the end, return the original node and an empty node
+        return new RopeNode("", node, null, node.weight);
+    } else if (index < node.left.weight) {
+        // If the index is within the left child, recursively split the left child
+        const [leftChildLeft, leftChildRight] = splitRope(node.left, index);
+        return new RopeNode("", leftChildLeft, new RopeNode("", leftChildRight, node.right, node.right.weight), index);
+    } else {
+        // If the index is within the right child, recursively split the right child
+        const [rightChildLeft, rightChildRight] = splitRope(node.right, index - node.left.weight);
+        return new RopeNode("", new RopeNode("", node.left, rightChildLeft, index), rightChildRight, node.right.weight);
+    }
 }
 
-// Driver code
-// Create a Rope tree for first string
-let root1 = null;
-let a = "Welcome to Ad-Duha Clothing.";
-let n1 = a.length;
-root1 = createRopeStructure(root1, null, a, 0, n1 - 1);
+function concatenateRopes(rope1, rope2) {
+    // If one of the ropes is empty, return the other rope
+    if (rope1 === null) {
+        return rope2;
+    }
+    if (rope2 === null) {
+        return rope1;
+    }
 
-// Create a Rope tree for second string
-let root2 = null;
-let b = "We make the best thobes.";
-let n2 = b.length;
-root2 = createRopeStructure(root2, null, b, 0, n2 - 1);
+    // Concatenate the two ropes by creating a new parent node
+    const weight = rope1.weight + rope2.weight;
+    return new RopeNode("", rope1, rope2, weight);
+}
 
-// // Concatenate the two strings into root3
-let root3 = null;
-root3 = concatenate(root3, root1, root1, n1);
 
-// Print the concatenated string
-printString(root3);
+
+// Example usage:
+const inputString = "Welcome to Ad-Duha. We make the best thobes.";
+const rope = createRope(inputString);
+// console.log(rope); // Print the rope structure
+
+printRope(rope); // rope is the root of the rope structure created earlier
+
+const index = 6; // Example split index
+const [rope1, rope2] = splitRope(rope, index);
+console.log("Rope 1:");
+printRope(rope1);
+console.log("Rope 2:");
+printRope(rope2);
+
+
+
+// Example usage:
+// Assuming 'rope1' and 'rope2' are the roots of the two rope structures
+const rope_to_concat1 = createRope("Buy our Emirati Maroon thobe at 15% discount today.")
+const rope_to_concat2 = createRope("Limited time offer! Order now.");
+const rope_concatted = concatenateRopes(rope_to_concat1, rope_to_concat2);
+console.log("Concatenated Rope:");
+printRope(rope_concatted);
+
+
+
